@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ekub - Interactive Excel-like Table</title>
+    <style>
+        body {
+            background: linear-gradient(135deg, #f5f7fa, #c3cfe2);
+            font-family: 'Arial', sans-serif;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        h1 {
+            font-size: 24px;
+            color: #333;
+            margin-bottom: 20px;
+        }
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            max-width: 600px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            background-color: #ffffff;
+            margin: 0 auto;
+        }
+        th, td {
+            border: 1px solid #dddddd;
+            text-align: center;
+            padding: 12px;
+            font-size: 14px;
+        }
+        th {
+            background-color: #4CAF50;
+            color: white;
+        }
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        tr:hover {
+            background-color: #f1f1f1;
+        }
+        .highlight {
+            background-color: #ffeb3b !important;
+        }
+        @media (max-width: 600px) {
+            h1 {
+                font-size: 20px;
+            }
+            th, td {
+                font-size: 12px;
+                padding: 8px;
+            }
+            table {
+                font-size: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <h1>Ekub</h1>
+    <table>
+        <thead>
+            <tr>
+                <th></th>
+                <th>Dani</th>
+                <th>Endalk</th>
+                <th>Sol</th>
+                <th>Mulye</th>
+                <th>Femi</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>January</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>February</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>March</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>April</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>May</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>June</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+        </tbody>
+    </table>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const cells = document.querySelectorAll('td');
+            const storageKey = 'tableCellColors';
+
+            // Load saved colors from localStorage
+            const savedColors = JSON.parse(localStorage.getItem(storageKey)) || {};
+
+            // Apply saved colors to cells
+            cells.forEach(cell => {
+                const cellIndex = cell.cellIndex;
+                const rowIndex = cell.parentElement.rowIndex;
+
+                const key = `${rowIndex}-${cellIndex}`;
+                if (savedColors[key]) {
+                    cell.classList.add('highlight');
+                }
+
+                // Add event listeners for double-click and single-click
+                cell.addEventListener('dblclick', () => {
+                    cell.classList.add('highlight');
+                    savedColors[key] = true;
+                    localStorage.setItem(storageKey, JSON.stringify(savedColors));
+                });
+
+                cell.addEventListener('click', () => {
+                    cell.classList.remove('highlight');
+                    delete savedColors[key];
+                    localStorage.setItem(storageKey, JSON.stringify(savedColors));
+                });
+            });
+        });
+    </script>
+</body>
+</html>
