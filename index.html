@@ -3,92 +3,169 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Video/Image Upload with Login</title>
+    <title>Ekub - Interactive Excel-like Table</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
+            background: linear-gradient(135deg, #f5f7fa, #c3cfe2);
+            font-family: 'Arial', sans-serif;
             display: flex;
             flex-direction: column;
+            justify-content: center;
             align-items: center;
-            background-color: #f4f4f9;
+            height: 100vh;
+            margin: 0;
         }
-        .container {
-            width: 80%;
+        h1 {
+            font-size: 24px;
+            color: #333;
+            margin-bottom: 20px;
+        }
+        table {
+            border-collapse: collapse;
+            width: 100%;
             max-width: 600px;
-            margin-top: 20px;
-            background: white;
-            padding: 20px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            background-color: #ffffff;
+            margin: 0 auto;
         }
-        input[type="file"] {
-            margin-bottom: 10px;
+        th, td {
+            border: 1px solid #dddddd;
+            text-align: center;
+            padding: 12px;
+            font-size: 14px;
         }
-        button {
-            padding: 10px 15px;
-            background-color: #007bff;
+        th {
+            background-color: #4CAF50;
             color: white;
-            border: none;
-            cursor: pointer;
         }
-        button:hover {
-            background-color: #0056b3;
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
         }
-        .uploaded {
-            margin-top: 20px;
+        tr:hover {
+            background-color: #f1f1f1;
         }
-        img, video {
-            max-width: 100%;
-            margin-top: 10px;
+        .highlight {
+            background-color: #ffeb3b !important;
+        }
+        @media (max-width: 600px) {
+            h1 {
+                font-size: 20px;
+            }
+            th, td {
+                font-size: 12px;
+                padding: 8px;
+            }
+            table {
+                font-size: 10px;
+            }
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h2>Login</h2>
-        <button id="loginBtn">Login</button>
-        <a href="#" style="margin-left: 10px;">Forgot Password?</a>
-        <div id="uploadSection" style="display:none;">
-            <h2>Upload Files</h2>
-            <input type="file" id="imageUpload" accept="image/*">
-            <input type="file" id="videoUpload" accept="video/*">
-            <button onclick="uploadFiles()">Upload Files</button>
-            <div class="uploaded">
-                <h3>Uploaded Images</h3>
-                <div id="uploadedImages"></div>
-                <h3>Uploaded Videos</h3>
-                <div id="uploadedVideos"></div>
-            </div>
-        </div>
-    </div>
+    <h1>Ekub</h1>
+    <table>
+        <thead>
+            <tr>
+                <th></th>
+                <th>Dani</th>
+                <th>Endalk</th>
+                <th>Sol</th>
+                <th>Mulye</th>
+                <th>Femi</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>January</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>February</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>March</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>April</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>May</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>June</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>July</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+        </tbody>
+    </table>
 
     <script>
-        document.getElementById('loginBtn').addEventListener('click', function() {
-            document.getElementById('uploadSection').style.display = 'block';
+        document.addEventListener('DOMContentLoaded', () => {
+            const cells = document.querySelectorAll('td');
+            const storageKey = 'tableCellColors';
+
+            // Load saved colors from localStorage
+            const savedColors = JSON.parse(localStorage.getItem(storageKey)) || {};
+
+            // Apply saved colors to cells
+            cells.forEach(cell => {
+                const cellIndex = cell.cellIndex;
+                const rowIndex = cell.parentElement.rowIndex;
+
+                const key = `${rowIndex}-${cellIndex}`;
+                if (savedColors[key]) {
+                    cell.classList.add('highlight');
+                }
+
+                // Add event listeners for double-click and single-click
+                cell.addEventListener('dblclick', () => {
+                    cell.classList.add('highlight');
+                    savedColors[key] = true;
+                    localStorage.setItem(storageKey, JSON.stringify(savedColors));
+                });
+
+                cell.addEventListener('click', () => {
+                    cell.classList.remove('highlight');
+                    delete savedColors[key];
+                    localStorage.setItem(storageKey, JSON.stringify(savedColors));
+                });
+            });
         });
-
-        function uploadFiles() {
-            const imageInput = document.getElementById('imageUpload');
-            const videoInput = document.getElementById('videoUpload');
-
-            if (imageInput.files.length > 0) {
-                // GitHub-hosted image URL
-                displayMedia('https://raw.githubusercontent.com/shewacossm/images/your-image.jpg', 'uploadedImages', 'img');
-            }
-
-            if (videoInput.files.length > 0) {
-                // GitHub-hosted video URL
-                displayMedia('https://raw.githubusercontent.com/shewacossm/videos/your-video.mp4', 'uploadedVideos', 'video');
-            }
-        }
-
-        function displayMedia(url, containerId, tag) {
-            const container = document.getElementById(containerId);
-            const mediaElement = document.createElement(tag);
-            mediaElement.src = url;
-            container.appendChild(mediaElement);
-        }
     </script>
 </body>
 </html>
