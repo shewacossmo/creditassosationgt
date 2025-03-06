@@ -10,236 +10,85 @@
             margin: 0;
             padding: 0;
             display: flex;
-            justify-content: center;
+            flex-direction: column;
             align-items: center;
-            height: 100vh;
-            background-color: limegreen;
+            background-color: #f4f4f9;
         }
         .container {
-            display: flex;
-            width: 95%;
-            max-width: 1200px;
-            height: 90%;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            overflow: hidden;
+            width: 80%;
+            max-width: 600px;
+            margin-top: 20px;
             background: white;
-        }
-        #sidebar {
-            background: #f9f9f9;
-            width: 250px;
             padding: 20px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            border-right: 1px solid #ccc;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         }
-        #content {
-            flex-grow: 1;
-            padding: 20px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            overflow-y: auto;
-        }
-        h2, h3 {
-            text-align: center;
-            margin-bottom: 20px;
-        }
-        input[type="text"],
-        input[type="password"],
         input[type="file"] {
-            width: 100%;
-            padding: 10px;
-            margin: 10px 0;
-            border: 1px solid #ccc;
-            border-radius: 4px;
+            margin-bottom: 10px;
         }
         button {
-            width: 100%;
-            padding: 10px;
-            background-color: #28a745;
+            padding: 10px 15px;
+            background-color: #007bff;
             color: white;
             border: none;
-            border-radius: 4px;
             cursor: pointer;
         }
         button:hover {
-            background-color: #218838;
+            background-color: #0056b3;
         }
-        .message {
-            margin-top: 10px;
-            text-align: center;
-            color: red;
+        .uploaded {
+            margin-top: 20px;
         }
-        a {
-            display: block;
-            margin-top: 10px;
-            text-align: center;
-            color: #007bff;
-            text-decoration: none;
-        }
-        a:hover {
-            text-decoration: underline;
-        }
-        #tabs {
-            display: flex;
-            width: 100%;
-            border-bottom: 1px solid #ccc;
-        }
-        .tab {
-            padding: 10px 20px;
-            cursor: pointer;
-            border: 1px solid #ccc;
-            border-bottom: none;
-            background-color: #f9f9f9;
-        }
-        .tab.active {
-            background-color: white;
-            font-weight: bold;
-        }
-        .tab-content {
-            display: none;
-            width: 100%;
-            padding: 20px;
-            overflow-y: auto;
-        }
-        .tab-content.active {
-            display: block;
-        }
-        #uploadedImages img,
-        #uploadedVideos video {
+        img, video {
             max-width: 100%;
             margin-top: 10px;
-        }
-        @media (max-width: 768px) {
-            .container {
-                flex-direction: column;
-                height: auto;
-            }
-            #sidebar {
-                width: 100%;
-                border-right: none;
-                border-bottom: 1px solid #ccc;
-            }
-            #content {
-                width: 100%;
-            }
         }
     </style>
 </head>
 <body>
-<div class="container" id="loginContainer">
-    <div id="sidebar">
+    <div class="container">
         <h2>Login</h2>
-        <input type="text" id="username" placeholder="Username" />
-        <input type="password" id="password" placeholder="Password" />
-        <button onclick="login()">Login</button>
-        <a href="#" onclick="forgotPassword()">Forgot Password?</a>
-        <div class="message" id="loginMessage"></div>
-    </div>
-    <div id="content">
-        <h2>Welcome</h2>
-        <p>Please log in to upload files.</p>
-    </div>
-</div>
-
-<div class="container" id="uploadContainer" style="display:none;">
-    <div id="sidebar">
-        <h3>Upload Files</h3>
-        <input type="file" id="bulkInput" multiple accept="image/*,video/*" />
-        <button onclick="uploadFiles()">Upload Files</button>
-        <div class="message" id="uploadMessage"></div>
-    </div>
-    <div id="content">
-        <div id="tabs">
-            <div class="tab active" onclick="switchTab('images')">Images</div>
-            <div class="tab" onclick="switchTab('videos')">Videos</div>
-        </div>
-        <div id="imagesContent" class="tab-content active">
-            <h2>Uploaded Images</h2>
-            <div id="uploadedImages"></div>
-        </div>
-        <div id="videosContent" class="tab-content">
-            <h2>Uploaded Videos</h2>
-            <div id="uploadedVideos"></div>
+        <button id="loginBtn">Login</button>
+        <a href="#" style="margin-left: 10px;">Forgot Password?</a>
+        <div id="uploadSection" style="display:none;">
+            <h2>Upload Files</h2>
+            <input type="file" id="imageUpload" accept="image/*">
+            <input type="file" id="videoUpload" accept="video/*">
+            <button onclick="uploadFiles()">Upload Files</button>
+            <div class="uploaded">
+                <h3>Uploaded Images</h3>
+                <div id="uploadedImages"></div>
+                <h3>Uploaded Videos</h3>
+                <div id="uploadedVideos"></div>
+            </div>
         </div>
     </div>
-</div>
 
-<script>
-    const validUser = "solea";
-    const validPassword = "25gt";
+    <script>
+        document.getElementById('loginBtn').addEventListener('click', function() {
+            document.getElementById('uploadSection').style.display = 'block';
+        });
 
-    function login() {
-        const username = document.getElementById("username").value;
-        const password = document.getElementById("password").value;
-        const messageElement = document.getElementById("loginMessage");
+        function uploadFiles() {
+            const imageInput = document.getElementById('imageUpload');
+            const videoInput = document.getElementById('videoUpload');
 
-        if (username === validUser && password === validPassword) {
-            document.getElementById("loginContainer").style.display = "none";
-            document.getElementById("uploadContainer").style.display = "flex";
-            messageElement.textContent = "";
-        } else {
-            messageElement.textContent = "Invalid username or password.";
-        }
-    }
+            if (imageInput.files.length > 0) {
+                // GitHub-hosted image URL
+                displayMedia('https://raw.githubusercontent.com/shewacossm/images/your-image.jpg', 'uploadedImages', 'img');
+            }
 
-    function forgotPassword() {
-        const email = "solea1742@gmail.com";
-        alert(`A password reset link has been sent to ${email}`);
-    }
-
-    function switchTab(tab) {
-        const tabs = document.querySelectorAll("#tabs .tab");
-        const contents = document.querySelectorAll(".tab-content");
-
-        tabs.forEach(t => t.classList.remove("active"));
-        contents.forEach(c => c.classList.remove("active"));
-
-        document.querySelector(`#tabs .tab:nth-child(${tab === "images" ? 1 : 2})`).classList.add("active");
-        document.getElementById(`${tab}Content`).classList.add("active");
-    }
-
-    function uploadFiles() {
-        const bulkInput = document.getElementById("bulkInput");
-        const uploadMessage = document.getElementById("uploadMessage");
-
-        if (bulkInput.files.length > 50) {
-            uploadMessage.textContent = "You can upload a maximum of 50 files at once.";
-            return;
+            if (videoInput.files.length > 0) {
+                // GitHub-hosted video URL
+                displayMedia('https://raw.githubusercontent.com/shewacossm/videos/your-video.mp4', 'uploadedVideos', 'video');
+            }
         }
 
-        if (bulkInput.files.length > 0) {
-            Array.from(bulkInput.files).forEach(file => {
-                saveFile(file);
-                displayFile(file);
-            });
-            uploadMessage.textContent = `${bulkInput.files.length} file(s) uploaded successfully.`;
-        } else {
-            uploadMessage.textContent = "Please select files to upload.";
+        function displayMedia(url, containerId, tag) {
+            const container = document.getElementById(containerId);
+            const mediaElement = document.createElement(tag);
+            mediaElement.src = url;
+            container.appendChild(mediaElement);
         }
-    }
-
-    function saveFile(file) {
-        const formData = new FormData();
-        formData.append(file.type.split("/")[0], file);
-
-        // Simulate saving the file (in a real-world scenario, this would be sent to a server)
-        console.log(`Saving file:`, file.name);
-    }
-
-    function displayFile(file) {
-        const container = file.type.startsWith("image") ? "uploadedImages" : "uploadedVideos";
-        const element = file.type.startsWith("image") ? "img" : "video";
-        const uploadedFilesDiv = document.getElementById(container);
-
-        const mediaElement = document.createElement(element);
-        mediaElement.src = URL.createObjectURL(file);
-        if (element === "video") mediaElement.controls = true;
-        mediaElement.alt = file.name;
-        uploadedFilesDiv.appendChild(mediaElement);
-    }
-</script>
+    </script>
 </body>
 </html>
